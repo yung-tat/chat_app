@@ -1,5 +1,5 @@
 defmodule ChatAppWeb.UserJSON do
-  alias ChatApp.Accounts.User
+  alias ChatApp.Schemas.User
 
   @doc """
   Renders a list of users.

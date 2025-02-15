@@ -6,7 +6,7 @@ defmodule ChatApp.Accounts do
   import Ecto.Query, warn: false
   alias ChatApp.Repo
 
-  alias ChatApp.Accounts.User
+  alias ChatApp.Schemas.User
 
   @doc """
   Returns the list of users.

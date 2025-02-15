@@ -1,4 +1,4 @@
-defmodule ChatApp.Accounts.User do
+defmodule ChatApp.Schemas.User do
   use ChatApp.Schema
   import Ecto.Changeset
 
