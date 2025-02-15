@@ -5,6 +5,8 @@ defmodule ChatApp.Schemas.Room do
   schema "rooms" do
     field :name, :string
 
+    has_many :user_rooms, ChatApp.Schemas.UserRooms
+
     timestamps(type: :utc_datetime)
   end
 
