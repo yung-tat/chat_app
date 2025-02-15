@@ -1,0 +1,12 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:14.8
+    env_file: config/localhost.env
+    ports:
+      - 7242:5432
+    volumes:
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db: {}
