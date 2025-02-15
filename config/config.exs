@@ -11,6 +11,14 @@ config :chat_app,
   ecto_repos: [ChatApp.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+config :chat_app, ChatApp.Repo,
+  migration_primary_key: [name: :id, type: :binary_id],
+  migration_timestamps: [
+    type: :utc_datetime,
+    inserted_at: :created_at,
+    updated_at: :changed_at
+  ]
+
 # Configures the endpoint
 config :chat_app, ChatAppWeb.Endpoint,
   url: [host: "localhost"],
@@ -19,8 +27,7 @@ config :chat_app, ChatAppWeb.Endpoint,
     formats: [html: ChatAppWeb.ErrorHTML, json: ChatAppWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: ChatApp.PubSub,
-  live_view: [signing_salt: "nZD8KaKk"]
+  pubsub_server: ChatApp.PubSub
 
 # Configures the mailer
 #

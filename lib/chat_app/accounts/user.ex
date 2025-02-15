@@ -1,5 +1,5 @@
 defmodule ChatApp.Accounts.User do
-  use Ecto.Schema
+  use ChatApp.Schema
   import Ecto.Changeset
 
   schema "users" do
@@ -14,5 +14,6 @@ defmodule ChatApp.Accounts.User do
     user
     |> cast(attrs, [:name, :password])
     |> validate_required([:name, :password])
+    |> unique_constraint(:name)
   end
 end
