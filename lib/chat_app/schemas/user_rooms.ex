@@ -1,5 +1,5 @@
 defmodule ChatApp.Schemas.UserRooms do
-  use Ecto.Schema
+  use ChatApp.Schema
   import Ecto.Changeset
 
   schema "user_rooms" do
@@ -14,5 +14,6 @@ defmodule ChatApp.Schemas.UserRooms do
     user_rooms
     |> cast(attrs, [])
     |> validate_required([])
+    |> unique_constraint([:user_id, :room_id], name: :user_rooms_user_id_room_id)
   end
 end
