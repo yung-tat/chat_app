@@ -4,6 +4,8 @@ defmodule ChatApp.RoomServer do
 
   # TODO: Use ets cache for invite code
 
+  @invite_timeout 1_000 * 60 * 25
+
   def start_link(room_id) do
     GenServer.start_link(
       __MODULE__,
@@ -29,6 +31,10 @@ defmodule ChatApp.RoomServer do
     GenServer.call(via_tuple(room_id), :get_info)
   end
 
+  def set_room_invite_code(room_id, invite_code) do
+    GenServer.cast(via_tuple(room_id), {:set_invite_code, invite_code, room_id})
+  end
+
   @impl true
   def init(initial_state) do
     {:ok, initial_state}
@@ -51,6 +57,21 @@ defmodule ChatApp.RoomServer do
 
   def handle_call(:get_info, _from, state) do
     {:reply, state, state}
+  end
+
+  @impl true
+  def handle_cast({:set_invite_code, invite_code, room_id}, state) do
+    new_state = Map.put(state, :invite_code, invite_code)
+    Process.send_after(self(),{:remove_invite_code, room_id}, @invite_timeout)
+    {:noreply, new_state}
+  end
+
+  @impl true
+  def handle_info({:remove_invite_code, room_id}, state) do
+    :ets.delete(:invite_code_registry, room_id)
+    :ets.delete(:invite_code_reverse_registry, state.invite_code)
+    new_state = Map.put(state, :invite_code, nil)
+    {:noreply, new_state}
   end
 
   def room_pid(room_id) do

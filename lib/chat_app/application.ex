@@ -22,6 +22,11 @@ defmodule ChatApp.Application do
       ChatAppWeb.Endpoint
     ]
 
+    # This cache stores in a table like: {room_id, invite_code}
+    :ets.new(:invite_code_registry, [:public, :named_table])
+    # This stores in the reverse like: {invite_code, room_id}
+    :ets.new(:invite_code_reverse_registry, [:public, :named_table])
+
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ChatApp.Supervisor]
