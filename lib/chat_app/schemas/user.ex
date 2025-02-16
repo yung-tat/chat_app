@@ -11,11 +11,12 @@ defmodule ChatApp.Schemas.User do
     timestamps(type: :utc_datetime)
   end
 
-  @doc false
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:name, :password])
     |> validate_required([:name, :password])
     |> unique_constraint(:name)
   end
+
+  def query, do: from(User, as: :users)
 end

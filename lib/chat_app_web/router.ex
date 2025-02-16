@@ -17,5 +17,4 @@ defmodule ChatAppWeb.Router do
   scope "/api", ChatAppWeb do
     pipe_through :api
   end
-
 end
