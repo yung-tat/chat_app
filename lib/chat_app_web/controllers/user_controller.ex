@@ -14,7 +14,7 @@ defmodule ChatAppWeb.UserController do
     end
   end
 
-  def log_in(conn, %{"name" => name, "password" => password}) do
+  def login(conn, %{"name" => name, "password" => password}) do
     case Accounts.get_user(name, password) do
       nil ->
         send_resp(conn, 404, "User and password combination could not be found.")

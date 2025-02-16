@@ -16,5 +16,8 @@ defmodule ChatAppWeb.Router do
 
   scope "/api", ChatAppWeb do
     pipe_through :api
+
+    post "/user/create", UserController, :create
+    post "/user/login", UserController, :login
   end
 end
