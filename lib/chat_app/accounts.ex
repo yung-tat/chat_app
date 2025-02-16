@@ -19,4 +19,6 @@ defmodule ChatApp.Accounts do
     |> where([user: u], u.name == ^name and u.password == ^password)
     |> Repo.one()
   end
+
+  def user_exists?(user), do: not is_nil(Repo.get(User, user.id))
 end

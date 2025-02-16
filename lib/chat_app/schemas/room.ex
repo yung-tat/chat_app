@@ -16,4 +16,6 @@ defmodule ChatApp.Schemas.Room do
     |> cast(attrs, [:name])
     |> validate_required([:name])
   end
+
+  def query, do: from(Room, as: :room)
 end

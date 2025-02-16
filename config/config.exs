@@ -14,9 +14,7 @@ config :chat_app,
 config :chat_app, ChatApp.Repo,
   migration_primary_key: [name: :id, type: :binary_id],
   migration_timestamps: [
-    type: :utc_datetime,
-    inserted_at: :created_at,
-    updated_at: :changed_at
+    type: :utc_datetime
   ]
 
 # Configures the endpoint

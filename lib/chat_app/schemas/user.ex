@@ -18,5 +18,5 @@ defmodule ChatApp.Schemas.User do
     |> unique_constraint(:name)
   end
 
-  def query, do: from(User, as: :users)
+  def query, do: from(User, as: :user)
 end
