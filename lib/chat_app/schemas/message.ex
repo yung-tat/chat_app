@@ -17,4 +17,6 @@ defmodule ChatApp.Schemas.Message do
     |> cast(attrs, [:message])
     |> validate_required([:message])
   end
+
+  def query, do: from(Message, as: :message)
 end

@@ -1,32 +1,50 @@
 defmodule ChatAppWeb.RoomChannel do
+  alias ChatApp.RoomServer
+  alias ChatApp.Messages
   alias ChatApp.UserRooms
   use ChatAppWeb, :channel
 
   @impl true
-  def join(topic, _payload, socket) do
-    "room:" <> room_id = topic
-
+  def join("room:" <> room_id, _payload, socket) do
     with user_id = socket.assigns.user,
          true <- UserRooms.is_user_authorized?(user_id, room_id) do
+      send(self(), {:after_join, user_id, room_id})
       {:ok, socket}
     else
       _ ->
-        {:error, "User is not authorized to join this room"}
+        {:error, "User is not part of this room"}
     end
   end
 
-  # Channels can be used in a request/response fashion
-  # by sending replies to requests from the client
   @impl true
-  def handle_in("ping", payload, socket) do
-    {:reply, {:ok, payload}, socket}
-  end
+  def handle_info({:after_join, user_id, room_id}, socket) do
+    # Add joined user to online user list
+    room_info = RoomServer.join_user(room_id, user_id)
 
-  # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (room:lobby).
-  @impl true
-  def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
+    # Send updated room info to everyone
+    broadcast(socket, "room_info", room_info)
+
+    # Send previous messages to joined user
+    messages = Messages.get_messages_by_room(room_id)
+    push(socket, "initial_messages", messages)
     {:noreply, socket}
   end
+
+  @impl true
+  def handle_in("send_message", %{"message" => message}, socket) do
+    with "room:" <> room_id <- socket.topic,
+         user_id <- socket.assigns.user,
+         {:ok, message} =
+           Messages.create_message(%{message: message, room_id: room_id, user_id: user_id}) do
+      broadcast(socket, "new_message", message)
+    end
+
+    {:noreply, socket}
+  end
+
+  # @impl true
+  # def terminate(_reason, socket) do
+  #   room_info = RoomServer.leave_user(socket.assigns.user)
+  #   broadcast(socket, "room_info", room_info)
+  # end
 end
