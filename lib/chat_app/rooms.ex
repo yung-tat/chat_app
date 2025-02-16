@@ -11,8 +11,8 @@ defmodule ChatApp.Rooms do
 
   def get_rooms_by_user(user_id) do
     with user <- Repo.get(User, user_id),
-        user <- Repo.preload(user, :user_rooms) do
-          user.user_rooms
-        end
+         user <- Repo.preload(user, :user_rooms) do
+      user.user_rooms
+    end
   end
 end

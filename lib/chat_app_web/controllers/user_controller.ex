@@ -30,12 +30,12 @@ defmodule ChatAppWeb.UserController do
   end
 
   def get_user_rooms(conn, _params) do
-    with token <- get_resp_header(conn, "auth-token"),
-        user_id <- Phoenix.Token.verify(ChatAppWeb.Endpoint, @salt, token),
-        user_rooms <- Rooms.get_rooms_by_user(user_id) do
-          conn
-          |> put_status(200)
-          |> render(:rooms, rooms: user_rooms)
-        end
+    with [token] <- get_resp_header(conn, "auth-token"),
+         user_id <- Phoenix.Token.verify(ChatAppWeb.Endpoint, @salt, token),
+         user_rooms <- Rooms.get_rooms_by_user(user_id) do
+      conn
+      |> put_status(200)
+      |> render(:rooms, rooms: user_rooms)
+    end
   end
 end
