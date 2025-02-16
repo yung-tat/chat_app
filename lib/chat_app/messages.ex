@@ -12,7 +12,7 @@ defmodule ChatApp.Messages do
   def get_messages_by_room(room_id) do
     Message.query()
     |> where([message: m], m.room_id == ^room_id)
-    |> order_by([asc: :inserted_at])
+    |> order_by(asc: :inserted_at)
     |> Repo.all()
   end
 end
