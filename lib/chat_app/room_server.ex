@@ -46,6 +46,12 @@ defmodule ChatApp.RoomServer do
     {:reply, state, state}
   end
 
+  def room_pid(room_id) do
+    room_id
+    |> via_tuple()
+    |> GenServer.whereis()
+  end
+
   defp via_tuple(room_id) do
     {:via, Registry, {ChatApp.RoomRegistry, room_id}}
   end

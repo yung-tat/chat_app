@@ -11,6 +11,7 @@ defmodule ChatApp.Application do
       ChatAppWeb.Telemetry,
       ChatApp.Repo,
       {Registry, keys: :unique, name: ChatApp.RoomRegistry},
+      ChatApp.RoomSupervisor,
       {DNSCluster, query: Application.get_env(:chat_app, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ChatApp.PubSub},
       # Start the Finch HTTP client for sending emails
