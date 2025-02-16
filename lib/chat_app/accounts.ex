@@ -20,5 +20,9 @@ defmodule ChatApp.Accounts do
     |> Repo.one()
   end
 
+  def get_user_by_id(id) do
+    Repo.get(User, id)
+  end
+
   def user_exists?(user), do: not is_nil(Repo.get(User, user.id))
 end
