@@ -5,16 +5,21 @@ defmodule ChatApp.RoomServer do
   # TODO: Use ets cache for invite code
 
   def start_link(room_id) do
-    GenServer.start_link(__MODULE__, %{
-      online_users: [],
-      invite_code: nil
-    },
-    name: via_tuple(room_id))
+    GenServer.start_link(
+      __MODULE__,
+      %{
+        online_users: [],
+        invite_code: nil
+      },
+      name: via_tuple(room_id)
+    )
   end
 
   def join_user(room_id, user_id) do
     case Accounts.get_user_by_id(user_id) do
-      nil -> {:error, "User not found"}
+      nil ->
+        {:error, "User not found"}
+
       user ->
         GenServer.call(via_tuple(room_id), {:user_joined, user})
     end
@@ -36,8 +41,10 @@ defmodule ChatApp.RoomServer do
   end
 
   def handle_call({:user_left, user_id}, _from, state) do
-    new_online_users = state.online_users
+    new_online_users =
+      state.online_users
       |> Enum.reject(fn user -> user.id == user_id end)
+
     new_state = Map.put(state, :online_users, new_online_users)
     {:reply, new_state, new_state}
   end

@@ -1,4 +1,4 @@
-defmodule ChatApp.Schemas.UserRooms do
+defmodule ChatApp.Schemas.UserRoom do
   use ChatApp.Schema
   import Ecto.Changeset
 
@@ -16,4 +16,6 @@ defmodule ChatApp.Schemas.UserRooms do
     |> validate_required([])
     |> unique_constraint([:user_id, :room_id], name: :user_rooms_user_id_room_id)
   end
+
+  def query, do: from(UserRoom, as: :user_room)
 end
