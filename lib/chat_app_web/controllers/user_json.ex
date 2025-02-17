@@ -26,4 +26,16 @@ defmodule ChatAppWeb.UserJSON do
   def token(%{token: token}) do
     %{token: token}
   end
+
+  def rooms(%{rooms: rooms}) do
+    %{
+      data:
+        Enum.map(rooms, fn room ->
+          %{
+            id: room.id,
+            name: room.name
+          }
+        end)
+    }
+  end
 end

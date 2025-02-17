@@ -22,6 +22,7 @@ defmodule ChatAppWeb.UserController do
 
   def login(conn, %{"name" => name, "password" => password}) do
     IO.inspect("PING")
+
     case Accounts.get_user(name, password) do
       nil ->
         send_resp(conn, 404, "User and password combination could not be found.")
@@ -34,8 +35,7 @@ defmodule ChatAppWeb.UserController do
   end
 
   def get_user_rooms(conn, _params) do
-    with [token] <- get_resp_header(conn, "auth-token"),
-         user_id <- Phoenix.Token.verify(ChatAppWeb.Endpoint, @salt, token),
+    with user_id <- conn.assigns.user_id,
          user_rooms <- Rooms.get_rooms_by_user(user_id) do
       conn
       |> put_status(200)
