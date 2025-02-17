@@ -1,6 +1,8 @@
 defmodule ChatAppWeb.UserSocket do
   use Phoenix.Socket
 
+  @salt "replace-user-salt"
+
   # A Socket handler
   #
   # It's possible to control the websocket connection and
@@ -29,7 +31,7 @@ defmodule ChatAppWeb.UserSocket do
   @impl true
   def connect(%{"token" => token}, socket, _connect_info) do
     # max_age: 1209600 is equivalent to two weeks in seconds
-    case Phoenix.Token.verify(socket, "user socket", token, max_age: 1_209_600) do
+    case Phoenix.Token.verify(socket, @salt, token, max_age: 1_209_600) do
       {:ok, user_id} ->
         {:ok, assign(socket, :user_id, user_id)}
 
