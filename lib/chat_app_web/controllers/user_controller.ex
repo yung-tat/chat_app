@@ -1,6 +1,7 @@
 defmodule ChatAppWeb.UserController do
   use ChatAppWeb, :controller
 
+  alias ChatApp.Repo
   alias ChatApp.UserRooms
   alias ChatApp.Rooms
   alias ChatApp.Accounts
@@ -21,8 +22,6 @@ defmodule ChatAppWeb.UserController do
   end
 
   def login(conn, %{"name" => name, "password" => password}) do
-    IO.inspect("PING")
-
     case Accounts.get_user(name, password) do
       nil ->
         send_resp(conn, 404, "User and password combination could not be found.")
@@ -36,13 +35,15 @@ defmodule ChatAppWeb.UserController do
 
   def get_user_rooms(conn, _params) do
     with user_id <- conn.assigns.user_id,
-         user_rooms <- Rooms.get_rooms_by_user(user_id) do
+         user_rooms <- Rooms.get_rooms_by_user(user_id),
+         user_rooms <- Enum.map(user_rooms, fn user_room -> Repo.preload(user_room, :room) end) do
       conn
       |> put_status(200)
       |> render(:rooms, rooms: user_rooms)
     end
   end
 
+  @spec join_room(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def join_room(conn, %{"invite_code" => invite_code}) do
     case :ets.lookup(:invite_code_reverse_registry, invite_code) do
       [] ->
@@ -55,8 +56,8 @@ defmodule ChatAppWeb.UserController do
   end
 
   defp assign_user_id(conn, _) do
-    with [token] <- get_resp_header(conn, "auth-token"),
-         user_id <- Phoenix.Token.verify(ChatAppWeb.Endpoint, @salt, token) do
+    with [token] <- get_req_header(conn, "authorization"),
+         {:ok, user_id} <- Phoenix.Token.verify(ChatAppWeb.Endpoint, @salt, token, max_age: 1_209_600) do
       assign(conn, :user_id, user_id)
     else
       _ ->

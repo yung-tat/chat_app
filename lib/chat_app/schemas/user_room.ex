@@ -12,8 +12,8 @@ defmodule ChatApp.Schemas.UserRoom do
   @doc false
   def changeset(user_rooms, attrs) do
     user_rooms
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:user_id, :room_id])
+    |> validate_required([:user_id, :room_id])
     |> unique_constraint([:user_id, :room_id], name: :user_rooms_user_id_room_id)
   end
 
