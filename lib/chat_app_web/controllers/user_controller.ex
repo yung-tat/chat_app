@@ -10,7 +10,7 @@ defmodule ChatAppWeb.UserController do
 
   @salt "replace-user-salt"
 
-  plug :assign_user_id, "Not for create" when action not in [:create]
+  plug :assign_user_id, "Not for create" when action not in [:create, :login]
 
   def create(conn, %{"name" => name, "password" => password}) do
     with {:ok, %User{} = user} <- Accounts.create_user(%{name: name, password: password}) do
@@ -21,6 +21,7 @@ defmodule ChatAppWeb.UserController do
   end
 
   def login(conn, %{"name" => name, "password" => password}) do
+    IO.inspect("PING")
     case Accounts.get_user(name, password) do
       nil ->
         send_resp(conn, 404, "User and password combination could not be found.")
@@ -28,7 +29,7 @@ defmodule ChatAppWeb.UserController do
       user ->
         token = Phoenix.Token.sign(ChatAppWeb.Endpoint, @salt, user.id)
 
-        send_resp(conn, 200, token)
+        render(conn, :token, token: token)
     end
   end
 

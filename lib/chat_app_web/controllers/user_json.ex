@@ -22,4 +22,8 @@ defmodule ChatAppWeb.UserJSON do
       password: user.password
     }
   end
+
+  def token(%{token: token}) do
+    %{token: token}
+  end
 end
