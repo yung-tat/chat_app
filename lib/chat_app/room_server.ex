@@ -62,7 +62,7 @@ defmodule ChatApp.RoomServer do
   @impl true
   def handle_cast({:set_invite_code, invite_code, room_id}, state) do
     new_state = Map.put(state, :invite_code, invite_code)
-    Process.send_after(self(),{:remove_invite_code, room_id}, @invite_timeout)
+    Process.send_after(self(), {:remove_invite_code, room_id}, @invite_timeout)
     {:noreply, new_state}
   end
 

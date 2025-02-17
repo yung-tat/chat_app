@@ -10,4 +10,10 @@ defmodule ChatApp.UserRooms do
     |> where([user_room: ur], ur.user_id == ^user_id and ur.room_id == ^room_id)
     |> Repo.one()
   end
+
+  def add_user_to_room(user_id, room_id) do
+    %UserRoom{}
+    |> UserRoom.changeset(%{user_id: user_id, room_id: room_id})
+    |> Repo.insert()
+  end
 end

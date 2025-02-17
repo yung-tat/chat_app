@@ -20,8 +20,9 @@ defmodule ChatAppWeb.Router do
     post "/user/create", UserController, :create
     post "/user/login", UserController, :login
     get "/user/rooms", UserController, :get_user_rooms
-    # post "/user/join", UserController, :join_room
+    post "/user/join/:invite_code", UserController, :join_room
 
-    # post "/room/create", RoomController, :create
+    post "/room/create", RoomController, :create
+    post "/room/create_invite_code", RoomController, :create_invite_code
   end
 end
