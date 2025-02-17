@@ -10,10 +10,10 @@ defmodule ChatAppWeb.UserController do
 
   @salt "replace-user-salt"
 
-  plug :assign_user_id
+  plug :assign_user_id, "Not for create" when action not in [:create]
 
-  def create(conn, %{"user_info" => user_params}) do
-    with {:ok, %User{} = user} <- Accounts.create_user(user_params) do
+  def create(conn, %{"name" => name, "password" => password}) do
+    with {:ok, %User{} = user} <- Accounts.create_user(%{name: name, password: password}) do
       conn
       |> put_status(:created)
       |> render(:show, user: user)
