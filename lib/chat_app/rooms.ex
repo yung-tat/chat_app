@@ -10,6 +10,10 @@ defmodule ChatApp.Rooms do
   alias ChatApp.Schemas.Room
   alias ChatApp.Schemas.User
 
+  def get_all_rooms do
+    Repo.all(Room)
+  end
+
   def get_room_by_id(room_id) do
     Repo.get(Room, room_id)
   end

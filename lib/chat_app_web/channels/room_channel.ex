@@ -50,6 +50,7 @@ defmodule ChatAppWeb.RoomChannel do
       room_info = RoomServer.leave_user(room_id, user_id)
       broadcast(socket, "room_info", render_room_info(room_info))
     end
+
     {:noreply, socket}
   end
 
