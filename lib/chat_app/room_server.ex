@@ -27,6 +27,16 @@ defmodule ChatApp.RoomServer do
     end
   end
 
+  def leave_user(room_id, user_id) do
+    case Accounts.get_user_by_id(user_id) do
+      nil ->
+        {:error, "User not found"}
+
+      user ->
+        GenServer.call(via_tuple(room_id), {:user_left, user})
+    end
+  end
+
   def get_room_info(room_id) do
     GenServer.call(via_tuple(room_id), :get_info)
   end

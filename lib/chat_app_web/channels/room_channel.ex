@@ -43,11 +43,15 @@ defmodule ChatAppWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  # @impl true
-  # def terminate(_reason, socket) do
-  #   room_info = RoomServer.leave_user(socket.assigns.user)
-  #   broadcast(socket, "room_info", room_info)
-  # end
+  @impl true
+  def terminate(_reason, socket) do
+    with "room:" <> room_id <- socket.topic,
+         user_id <- socket.assigns.user_id do
+      room_info = RoomServer.leave_user(room_id, user_id)
+      broadcast(socket, "room_info", room_info)
+    end
+    {:noreply, socket}
+  end
 
   defp render_room_info(room_info) do
     %{
@@ -68,12 +72,13 @@ defmodule ChatAppWeb.RoomChannel do
 
   defp render_message(message) do
     message = Repo.preload(message, :user)
-       %{
-        user: %{
-          id: message.user.id,
-          name: message.user.name
-        },
-        message: message.message
-       }
+
+    %{
+      user: %{
+        id: message.user.id,
+        name: message.user.name
+      },
+      message: message.message
+    }
   end
 end
