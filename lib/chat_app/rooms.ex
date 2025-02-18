@@ -25,6 +25,14 @@ defmodule ChatApp.Rooms do
     end
   end
 
+  def get_room_by_invite_code(invite_code) do
+    case :ets.lookup(:invite_code_reverse_registry, invite_code) do
+      [] -> :not_found
+      [{^invite_code, room_id}] ->
+        get_room_by_id(room_id)
+    end
+  end
+
   def create_room(name) do
     %Room{}
     |> Room.changeset(%{name: name})

@@ -15,5 +15,6 @@ defmodule ChatAppWeb.Router do
 
     post "/room/create", RoomController, :create
     post "/room/create_invite_code", RoomController, :create_invite_code
+    get "/room/get_by_invite_code/:invite_code", RoomController, :get_room_by_invite_code
   end
 end

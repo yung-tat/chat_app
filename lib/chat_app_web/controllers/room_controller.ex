@@ -23,7 +23,16 @@ defmodule ChatAppWeb.RoomController do
 
       _ ->
         invite_code = Rooms.maybe_create_room_invite_code(room_id)
-        send_resp(conn, 201, invite_code)
+        render(conn, :invite_code, code: invite_code)
+    end
+  end
+
+  def get_room_by_invite_code(conn, %{"invite_code" => code}) do
+    case Rooms.get_room_by_invite_code(code) do
+      :not_found ->
+        send_resp(conn, 404, "Invite code does not match to a room")
+      room ->
+        render(conn, :room, room: room)
     end
   end
 
