@@ -14,8 +14,8 @@ defmodule ChatApp.Schemas.Message do
   @doc false
   def changeset(message, attrs) do
     message
-    |> cast(attrs, [:message])
-    |> validate_required([:message])
+    |> cast(attrs, [:message, :user_id, :room_id])
+    |> validate_required([:message, :user_id, :room_id])
   end
 
   def query, do: from(Message, as: :message)

@@ -29,7 +29,8 @@ defmodule ChatAppWeb.RoomController do
 
   defp assign_user_id(conn, _) do
     with [token] <- get_req_header(conn, "authorization"),
-         {:ok, user_id} <- Phoenix.Token.verify(ChatAppWeb.Endpoint, @salt, token, max_age: 1_209_600) do
+         {:ok, user_id} <-
+           Phoenix.Token.verify(ChatAppWeb.Endpoint, @salt, token, max_age: 1_209_600) do
       assign(conn, :user_id, user_id)
     else
       _ ->
