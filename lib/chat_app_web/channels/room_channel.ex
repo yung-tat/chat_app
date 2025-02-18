@@ -1,4 +1,5 @@
 defmodule ChatAppWeb.RoomChannel do
+  alias ChatApp.Rooms
   alias ChatApp.Repo
   alias ChatApp.RoomServer
   alias ChatApp.Messages
@@ -21,9 +22,10 @@ defmodule ChatAppWeb.RoomChannel do
   def handle_info({:after_join, user_id, room_id}, socket) do
     # Add joined user to online user list
     room_info = RoomServer.join_user(room_id, user_id)
+    room = Rooms.get_room_by_id(room_id)
 
     # Send updated room info to everyone
-    broadcast(socket, "room_info", render_room_info(room_info))
+    broadcast(socket, "room_info", render_room_info(room_info, room))
 
     # Send previous messages to joined user
     messages = Messages.get_messages_by_room(room_id)
@@ -48,20 +50,22 @@ defmodule ChatAppWeb.RoomChannel do
     with "room:" <> room_id <- socket.topic,
          user_id <- socket.assigns.user_id do
       room_info = RoomServer.leave_user(room_id, user_id)
-      broadcast(socket, "room_info", render_room_info(room_info))
+      room = Rooms.get_room_by_id(room_id)
+      broadcast(socket, "room_info", render_room_info(room_info, room))
     end
 
     {:noreply, socket}
   end
 
-  defp render_room_info(room_info) do
+  defp render_room_info(room_info, room) do
     %{
       invite_code: room_info.invite_code,
       online_users:
         Enum.map(
           room_info.online_users,
           fn user -> %{id: user.id, name: user.name} end
-        )
+        ),
+      room_name: room.name
     }
   end
 
