@@ -52,8 +52,12 @@ defmodule ChatApp.RoomServer do
 
   @impl true
   def handle_call({:user_joined, user}, _from, state) do
-    new_state = Map.put(state, :online_users, state.online_users ++ [user])
-    {:reply, new_state, new_state}
+    if user not in state.online_users do
+      new_state = Map.put(state, :online_users, state.online_users ++ [user])
+      {:reply, new_state, new_state}
+    else
+      {:reply, state, state}
+    end
   end
 
   def handle_call({:user_left, user_id}, _from, state) do
