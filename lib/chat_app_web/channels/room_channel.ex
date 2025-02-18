@@ -48,7 +48,7 @@ defmodule ChatAppWeb.RoomChannel do
     with "room:" <> room_id <- socket.topic,
          user_id <- socket.assigns.user_id do
       room_info = RoomServer.leave_user(room_id, user_id)
-      broadcast(socket, "room_info", room_info)
+      broadcast(socket, "room_info", render_room_info(room_info))
     end
     {:noreply, socket}
   end
